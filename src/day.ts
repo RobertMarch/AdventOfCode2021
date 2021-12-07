@@ -37,4 +37,8 @@ export abstract class Day {
         const file = fs.readFileSync(`inputs/day${this.dayId}.txt`)
         return file.toString();
     }
+
+    protected splitLines(input: string): string[] {
+        return input.split('\r\n');
+    }
 }
