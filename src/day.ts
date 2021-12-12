@@ -1,44 +1,38 @@
-import * as fs from 'fs';
+import * as fs from "fs";
 
 export abstract class Day {
+  constructor(private dayId: string) {}
 
-    constructor(private dayId: string) {}
+  /**
+   * Runs Part One of the given day, if puzzleInput is true, uses the actual puzzle input, otherwise uses the
+   * test input.
+   */
+  public partOne(puzzleInput: boolean = true): any {
+    const input = this.loadFile(puzzleInput);
+    return this.solvePartOne(input);
+  }
 
-    public partOneExample(): any {
-        const input = this.loadTestInput();
-        return this.solvePartOne(input)
-    }
+  protected abstract solvePartOne(input: string): any;
 
-    public partOne(): any {
-        const input = this.loadFile();
-        return this.solvePartOne(input)
-    }
+  /**
+   * Runs Part Two of the given day, if puzzleInput is true, uses the actual puzzle input, otherwise uses the
+   * test input.
+   */
+  public partTwo(puzzleInput: boolean = true): any {
+    const input = this.loadFile(puzzleInput);
+    return this.solvePartTwo(input);
+  }
 
-    protected abstract solvePartOne(input: string): any;
+  protected abstract solvePartTwo(input: string): any;
 
-    public partTwoExample(): any {
-        const input = this.loadTestInput();
-        return this.solvePartTwo(input)
-    }
-    
-    public partTwo(): any {
-        const input = this.loadFile();
-        return this.solvePartTwo(input)
-    }
+  private loadFile(puzzleInput: boolean): any {
+    const file = fs.readFileSync(
+      `${puzzleInput ? "inputs" : "test_inputs"}/day${this.dayId}.txt`
+    );
+    return file.toString();
+  }
 
-    protected abstract solvePartTwo(input: string): any;
-
-    private loadTestInput(): any {
-        const file = fs.readFileSync(`inputs_examples/day${this.dayId}.txt`)
-        return file.toString();
-    }
-
-    private loadFile(): any {
-        const file = fs.readFileSync(`inputs/day${this.dayId}.txt`)
-        return file.toString();
-    }
-
-    protected splitLines(input: string): string[] {
-        return input.split('\r\n');
-    }
+  protected splitLines(input: string): string[] {
+    return input.split("\r\n");
+  }
 }
