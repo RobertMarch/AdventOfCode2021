@@ -6,7 +6,8 @@
     "build-test": "npm run build && node build/index-test.js",
     "build-watch": "tsc -watch",
     "start": "node build/index.js",
-    "test": "node build/index-test.js"
+    "test": "node build/index-test.js",
+    "setup": "node src/setup.js"
   },
   "devDependencies": {
     "@types/node": "^16.11.11",
