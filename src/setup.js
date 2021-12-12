@@ -49,37 +49,53 @@ async function createInputFiles() {
 
   const testInputsPath = path.join(startPath, "test_inputs");
   await createDirectoryIfItDoesNotExist(testInputsPath);
-  createFileIfItDoesNotExist(path.join(testInputsPath, `day${day}.txt`), "");
+  copyTemplate(
+    path.join(testInputsPath, `dayXX.ts`),
+    path.join(testInputsPath, `day${day}.ts`)
+  );
 }
 
 async function copyTemplate(from, to) {
-  const content = (await promises.readFile(from, { encoding: "utf8" }))
-  .replace(/XX/g, day);
+  const content = (await promises.readFile(from, { encoding: "utf8" })).replace(
+    /XX/g,
+    day
+  );
   createFileIfItDoesNotExist(to, content);
 }
 
 async function createCodeFiles() {
-  const templateFolder = path.join(startPath, "src", "template");
   const codeFolder = path.join(startPath, "src", "days");
   await createDirectoryIfItDoesNotExist(codeFolder);
   await copyTemplate(
-    path.join(templateFolder, "dayXX.ts"),
+    path.join(codeFolder, "dayXX.ts"),
     path.join(codeFolder, `day${day}.ts`)
   );
 }
 
 async function updateDaysMapping() {
   const daysMappingPath = path.join(startPath, "src", "days.ts");
-  const contents = (await promises.readFile(daysMappingPath, { encoding: "utf8" }))
+  const contents = (
+    await promises.readFile(daysMappingPath, { encoding: "utf8" })
+  )
     .replace(
       "// MORE IMPORTS HERE",
       `import { Day${day} } from './days/day${day}';
 // MORE IMPORTS HERE`
     )
     .replace(
+      "// MORE TEST CASE IMPORTS HERE",
+      `import { DAY_${day}_TEST_CASES } from '../test_inputs/day${day}';
+// MORE TEST CASE IMPORTS HERE`
+    )
+    .replace(
       "// MORE DAYS HERE",
       `${parseInt(day)}: new Day${day}(),
   // MORE DAYS HERE`
+    )
+    .replace(
+      "// MORE TEST CASES HERE",
+      `${parseInt(day)}: DAY_${day}_TEST_CASES,
+  // MORE TEST CASES HERE`
     );
 
   console.log("Updating days mapping");

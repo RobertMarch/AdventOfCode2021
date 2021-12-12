@@ -1,3 +1,17 @@
+import { DAY_01_TEST_CASES } from "../test_inputs/day01";
+import { DAY_02_TEST_CASES } from "../test_inputs/day02";
+import { DAY_03_TEST_CASES } from "../test_inputs/day03";
+import { DAY_04_TEST_CASES } from "../test_inputs/day04";
+import { DAY_05_TEST_CASES } from "../test_inputs/day05";
+import { DAY_06_TEST_CASES } from "../test_inputs/day06";
+import { DAY_07_TEST_CASES } from "../test_inputs/day07";
+import { DAY_08_TEST_CASES } from "../test_inputs/day08";
+import { DAY_09_TEST_CASES } from "../test_inputs/day09";
+import { DAY_10_TEST_CASES } from "../test_inputs/day10";
+import { DAY_11_TEST_CASES } from "../test_inputs/day11";
+import { DAY_12_TEST_CASES } from "../test_inputs/day12";
+// MORE TEST CASE IMPORTS HERE
+import { TestCase } from "../test_inputs/test-case";
 import { Day } from "./day";
 import { Day01 } from "./days/day01";
 import { Day02 } from "./days/day02";
@@ -7,6 +21,10 @@ import { Day05 } from "./days/day05";
 import { Day06 } from "./days/day06";
 import { Day07 } from "./days/day07";
 import { Day08 } from "./days/day08";
+import { Day09 } from "./days/day09";
+import { Day10 } from "./days/day10";
+import { Day11 } from "./days/day11";
+import { Day12 } from "./days/day12";
 // MORE IMPORTS HERE
 
 export const DAYS: Record<number, Day> = {
@@ -18,5 +36,25 @@ export const DAYS: Record<number, Day> = {
   6: new Day06(),
   7: new Day07(),
   8: new Day08(),
+  9: new Day09(),
+  10: new Day10(),
+  11: new Day11(),
+  12: new Day12(),
   // MORE DAYS HERE
+};
+
+export const TEST_CASES: Record<number, TestCase[]> = {
+  1: DAY_01_TEST_CASES,
+  2: DAY_02_TEST_CASES,
+  3: DAY_03_TEST_CASES,
+  4: DAY_04_TEST_CASES,
+  5: DAY_05_TEST_CASES,
+  6: DAY_06_TEST_CASES,
+  7: DAY_07_TEST_CASES,
+  8: DAY_08_TEST_CASES,
+  9: DAY_09_TEST_CASES,
+  10: DAY_10_TEST_CASES,
+  11: DAY_11_TEST_CASES,
+  12: DAY_12_TEST_CASES,
+  // MORE TEST CASES HERE
 };
