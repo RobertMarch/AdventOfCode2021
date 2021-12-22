@@ -100,7 +100,7 @@ export class DayRunner {
     expectedResult: any
   ): string {
     return `Part ${part}${
-      !!expectedResult
+      expectedResult !== null && expectedResult !== undefined
         ? `${
             actualResult === expectedResult
               ? " Success!"
