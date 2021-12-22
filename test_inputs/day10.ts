@@ -12,6 +12,7 @@ export const DAY_10_TEST_CASES: TestCase[] = [
 [<(<(<(<{}))><([]([]()
 <{([([[(<>()){}]>(<<{{
 <{([{{}}[<[[[<>{}]]]>[]]`,
-    expectedPartOneOutput: 26397
+    expectedPartOneOutput: 26397,
+    expectedPartTwoOutput: 288957
   },
 ]

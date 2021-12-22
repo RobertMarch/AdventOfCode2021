@@ -13,5 +13,6 @@ export const DAY_11_TEST_CASES: TestCase[] = [
 4846848554
 5283751526`,
     expectedPartOneOutput: 1656,
+    expectedPartTwoOutput: 195,
   },
 ];

@@ -10,6 +10,7 @@ b-d
 A-end
 b-end`,
     expectedPartOneOutput: 10,
+    expectedPartTwoOutput: 36,
   },
   {
     input: `dc-end
@@ -23,6 +24,7 @@ kj-sa
 kj-HN
 kj-dc`,
     expectedPartOneOutput: 19,
+    expectedPartTwoOutput: 103,
   },
   {
     input: `fs-end
@@ -44,5 +46,6 @@ zg-he
 pj-fs
 start-RW`,
     expectedPartOneOutput: 226,
+    expectedPartTwoOutput: 3509,
   },
 ];
