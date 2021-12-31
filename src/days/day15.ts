@@ -16,7 +16,7 @@ class Coordinate extends BaseCoordinate {
     return new Coordinate(parts[0], parts[1]);
   }
 
-  private static addCoordinates<T extends BaseCoordinate>(
+  private static addCoordinate<T extends BaseCoordinate>(
     a: T,
     b: BaseCoordinate
   ): T {
@@ -28,7 +28,7 @@ class Coordinate extends BaseCoordinate {
 
   public getNeighbours(maxX: number, maxY: number): Coordinate[] {
     return Coordinate.NEIGHBOUR_DIRECTIONS.map((direction: BaseCoordinate) =>
-      Coordinate.addCoordinates(this, direction)
+      Coordinate.addCoordinate(this, direction)
     ).filter(
       (point) =>
         point.x >= 0 && point.x < maxX && point.y >= 0 && point.y < maxY
