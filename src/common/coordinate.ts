@@ -42,4 +42,8 @@ export class Base3DCoordinate {
   public equals(other: Base3DCoordinate): boolean {
     return this.x === other.x && this.y === other.y && this.z === other.z;
   }
+
+  public getManhattanMagnitude(): number {
+    return Math.abs(this.x) + Math.abs(this.y) + Math.abs(this.z)
+  }
 }

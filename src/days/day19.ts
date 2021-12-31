@@ -189,6 +189,10 @@ class Scanner {
     this.scannerLocation.rotationIndex = orientation;
   }
 
+  public getScannerLocation(): Base3DCoordinate {
+    return this.scannerLocation.vector;
+  }
+
   public getVectorIntersectWithKnownVectors(knownVectors: DirectionalVector[]): MatchedVector[] {
     return this.beaconDifferenceVectors.flatMap((vector) =>
       knownVectors
@@ -206,10 +210,6 @@ export class Day19 extends Day {
   private _knownScanners: number[];
 
   public solvePartOne(input: string): number {
-    // const test = new Base3DCoordinate(1, 2, 3);
-    // for (let i = 0; i < allRotations.length; i++) {
-    //   console.log(allRotations[i](test), rotationsUnmappings[i](test), rotationsUnmappings[i](allRotations[i](test)));
-    // }
     this._scanners = splitLines(input, true, 2).map((value) => new Scanner(value));
 
     this._knownPoints = [];
@@ -217,8 +217,29 @@ export class Day19 extends Day {
 
     this._addScannerToKnownPoints(0, new Base3DCoordinate(0, 0, 0), 0);
 
-    // console.log((this._scanners[2] as any).scannerLocation);
     return this._knownPoints.length;
+  }
+
+  public solvePartTwo(input: string): number {
+    this._scanners = splitLines(input, true, 2).map((value) => new Scanner(value));
+
+    this._knownPoints = [];
+    this._knownScanners = [];
+
+    this._addScannerToKnownPoints(0, new Base3DCoordinate(0, 0, 0), 0);
+
+    return Math.max(
+      ...this._scanners
+        .map((scanner) => scanner.getScannerLocation())
+        .flatMap((scanner1: Base3DCoordinate, index: number) =>
+          this._scanners
+            .slice(index + 1)
+            .map((scanner) => scanner.getScannerLocation())
+            .map((scanner2: Base3DCoordinate) =>
+              scanner1.getVectorFromOtherCoordinate(scanner2).getManhattanMagnitude()
+            )
+        )
+    );
   }
 
   private _addScannerToKnownPoints(
@@ -247,24 +268,18 @@ export class Day19 extends Day {
       ...scannerReorientedPoints.filter((point) => !this._knownPoints.some((p) => p.equals(point)))
     );
 
-    // console.log(scannerIndex, this._knownPoints.length, reorientedScannerVectors.length);
-
     this._scanners.forEach((otherScanner: Scanner, otherIndex: number) => {
       if (!this._knownScanners.includes(otherIndex)) {
         const intersectionOfVectors: MatchedVector[] =
           otherScanner.getVectorIntersectWithKnownVectors(reorientedScannerVectors);
 
         if (intersectionOfVectors.length >= 66) {
-          // console.log(otherIndex, scannerIndex, intersectionOfVectors.length);
-
-          // Work out new center and orientation
-          // Issues start when adding scanner 4 (first chained one, so check here first)
           const vector: MatchedVector = intersectionOfVectors[0];
           const knownStart = vector.knownVector.start;
           const otherScannerRelativeStart = vector.newVector.start;
 
-          const knownVector = vector.knownVector.end.getVectorFromOtherCoordinate(vector.knownVector.start); // rotationsUnmappings[vector.knownVector.rotationIndex](vector.knownVector.vector);
-          const newVector = vector.newVector.end.getVectorFromOtherCoordinate(vector.newVector.start); //rotationsUnmappings[vector.newVector.rotationIndex](vector.newVector.vector);
+          const knownVector = vector.knownVector.end.getVectorFromOtherCoordinate(vector.knownVector.start);
+          const newVector = vector.newVector.end.getVectorFromOtherCoordinate(vector.newVector.start);
 
           let mappingIndex = null;
           allRotations.forEach((rotation, index) => {
@@ -289,9 +304,5 @@ export class Day19 extends Day {
     return scanner
       .getAllRelativeBeaconPositions()
       .map((coordinate) => Base3DCoordinate.addCoordinates(location, orientationUnmapping(coordinate)));
-  }
-
-  public solvePartTwo(input: string): number {
-    return -1;
   }
 }
