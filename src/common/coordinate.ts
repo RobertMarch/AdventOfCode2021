@@ -1,5 +1,16 @@
 export class BaseCoordinate {
-  constructor(public x: number, public y: number) {}
+  public static addCoordinates(
+    a: BaseCoordinate,
+    b: BaseCoordinate
+  ): BaseCoordinate {
+    return new BaseCoordinate(
+      a.x + b.x,
+      a.y + b.y
+    );
+  }
+
+  constructor(public x: number, public y: number) {
+  }
 
   public equals(other: BaseCoordinate): boolean {
     return this.x === other.x && this.y === other.y;
