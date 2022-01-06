@@ -2,6 +2,7 @@ import { BaseCoordinate } from "../common/coordinate";
 import { Day } from "../day";
 import { splitLines } from "../utils/string-utils";
 import * as lodash from "lodash";
+import { range } from "../utils/array-utils";
 
 enum AmphipodType {
   A = "A",
@@ -42,11 +43,15 @@ class Amphipod {
 
   public isInCorrectLocation(allAmphipods: Record<string, Amphipod>): boolean {
     const location: Location = this._getLocation();
-    return (
-      this.type === location.targetRoomForType &&
-      (location.y == 2 ||
-        (location.y == 1 &&
-          allAmphipods[`${location.x},2`]?.type === AllLocations[`${location.x},2`].targetRoomForType))
+    if (this.type !== location.targetRoomForType) {
+      return false;
+    }
+
+    return range(1, 5).every(
+      (index) =>
+        index <= location.y ||
+        !AllLocations[`${location.x},${index}`] ||
+        allAmphipods[`${location.x},${index}`]?.type === AllLocations[`${location.x},${index}`].targetRoomForType
     );
   }
 
@@ -69,7 +74,12 @@ class Amphipod {
     const moveToDestination: Location = possibleMoves.find(
       (loc) =>
         loc.x === AmphipodTargetColumn[this.type] &&
-        (loc.y == 2 || (loc.y == 1 && !!allAmphipods[`${loc.x},2`] && allAmphipods[`${loc.x},2`].type === this.type))
+        range(1, 5).every(
+          (index) =>
+            index <= loc.y ||
+            !AllLocations[`${loc.x},${index}`] ||
+            allAmphipods[`${loc.x},${index}`]?.type === this.type
+        )
     );
 
     if (moveToDestination) {
@@ -124,35 +134,53 @@ class Location extends BaseCoordinate {
   }
 }
 
-const AllLocations: Record<string, Location> = [
-  new Location(0, 0, true, null),
-  new Location(1, 0, true, null),
-  new Location(2, 0, false, null),
-  new Location(3, 0, true, null),
-  new Location(4, 0, false, null),
-  new Location(5, 0, true, null),
-  new Location(6, 0, false, null),
-  new Location(7, 0, true, null),
-  new Location(8, 0, false, null),
-  new Location(9, 0, true, null),
-  new Location(10, 0, true, null),
-  new Location(2, 1, true, AmphipodType.A),
-  new Location(2, 2, true, AmphipodType.A),
-  new Location(4, 1, true, AmphipodType.B),
-  new Location(4, 2, true, AmphipodType.B),
-  new Location(6, 1, true, AmphipodType.C),
-  new Location(6, 2, true, AmphipodType.C),
-  new Location(8, 1, true, AmphipodType.D),
-  new Location(8, 2, true, AmphipodType.D),
-].reduce((map, curr) => {
-  map[curr.serialisedValue] = curr;
-  return map;
-}, {});
+let AllLocations: Record<string, Location>;
+
+function defineAllLocationsList(part: "a" | "b"): void {
+  const locations = [
+    new Location(0, 0, true, null),
+    new Location(1, 0, true, null),
+    new Location(2, 0, false, null),
+    new Location(3, 0, true, null),
+    new Location(4, 0, false, null),
+    new Location(5, 0, true, null),
+    new Location(6, 0, false, null),
+    new Location(7, 0, true, null),
+    new Location(8, 0, false, null),
+    new Location(9, 0, true, null),
+    new Location(10, 0, true, null),
+    new Location(2, 1, true, AmphipodType.A),
+    new Location(2, 2, true, AmphipodType.A),
+    new Location(4, 1, true, AmphipodType.B),
+    new Location(4, 2, true, AmphipodType.B),
+    new Location(6, 1, true, AmphipodType.C),
+    new Location(6, 2, true, AmphipodType.C),
+    new Location(8, 1, true, AmphipodType.D),
+    new Location(8, 2, true, AmphipodType.D),
+  ];
+  if (part == "b") {
+    locations.push(
+      new Location(2, 3, true, AmphipodType.A),
+      new Location(2, 4, true, AmphipodType.A),
+      new Location(4, 3, true, AmphipodType.B),
+      new Location(4, 4, true, AmphipodType.B),
+      new Location(6, 3, true, AmphipodType.C),
+      new Location(6, 4, true, AmphipodType.C),
+      new Location(8, 3, true, AmphipodType.D),
+      new Location(8, 4, true, AmphipodType.D)
+    );
+  }
+  AllLocations = locations.reduce((map, curr) => {
+    map[curr.serialisedValue] = curr;
+    return map;
+  }, {});
+}
 
 export class Day23 extends Day {
   private _cachedResults: Map<string, number>;
 
   public solvePartOne(input: string): number {
+    defineAllLocationsList("a");
     const lines: string[] = splitLines(input, false);
     const amphipods: Record<string, Amphipod> = lines
       .slice(2, 4)
@@ -242,6 +270,35 @@ export class Day23 extends Day {
   }
 
   public solvePartTwo(input: string): number {
-    return -1;
+    defineAllLocationsList("b");
+    const lines: string[] = splitLines(input, false);
+    const amphipods: Amphipod[] = lines.slice(2, 4).flatMap((line, index) => {
+      return [
+        new Amphipod(line[3] as AmphipodType, `2,${index * 3 + 1}`),
+        new Amphipod(line[5] as AmphipodType, `4,${index * 3 + 1}`),
+        new Amphipod(line[7] as AmphipodType, `6,${index * 3 + 1}`),
+        new Amphipod(line[9] as AmphipodType, `8,${index * 3 + 1}`),
+      ];
+    });
+
+    const additionalAmphipods: Amphipod[] = [
+      new Amphipod(AmphipodType.A, "8,2"),
+      new Amphipod(AmphipodType.A, "6,3"),
+      new Amphipod(AmphipodType.B, "6,2"),
+      new Amphipod(AmphipodType.B, "4,3"),
+      new Amphipod(AmphipodType.C, "4,2"),
+      new Amphipod(AmphipodType.C, "8,3"),
+      new Amphipod(AmphipodType.D, "2,2"),
+      new Amphipod(AmphipodType.D, "2,3"),
+    ];
+
+    const allAmphipods: Record<string, Amphipod> = [...amphipods, ...additionalAmphipods].reduce((map, curr) => {
+      map[curr.currentLocation] = curr;
+      return map;
+    }, {});
+
+    this._cachedResults = new Map();
+    const res = this._getBestEnergyCostFromCurrentSetup(allAmphipods);
+    return res;
   }
 }
