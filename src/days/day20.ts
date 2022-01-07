@@ -1,4 +1,3 @@
-import { getPriority } from "os";
 import { BaseCoordinate } from "../common/coordinate";
 import { Day } from "../day";
 import { range } from "../utils/array-utils";
@@ -36,7 +35,7 @@ export class Day20 extends Day {
   }
 
   public solvePartTwo(input: string): number {
-    return this._getPixelCountAfterNEnhancements(input, 10);
+    return this._getPixelCountAfterNEnhancements(input, 50);
   }
 
   private _getPixelCountAfterNEnhancements(input: string, enhancementCount: number): number {
@@ -47,8 +46,8 @@ export class Day20 extends Day {
     let lightPixels: Record<string, Coordinate> = this._getInitialLightPixels(parts[1]);
     const gridInfo: GridInformation = this._getInitialGridInformation(lightPixels, infiniteGridSwitches);
 
-    range(0, enhancementCount).forEach(() => {
-      this._updateGridInformation(gridInfo);
+    range(0, enhancementCount).forEach((i) => {
+      this._updateGridInformation(gridInfo, i);
 
       const newLightPixels: Record<string, Coordinate> = {};
       for (let x = gridInfo.minX - 1; x <= gridInfo.maxX + 1; x++) {
@@ -110,12 +109,12 @@ export class Day20 extends Day {
     };
   }
 
-  private _updateGridInformation(gridInfo: GridInformation): void {
+  private _updateGridInformation(gridInfo: GridInformation, i: number): void {
     gridInfo.minX -= 1;
     gridInfo.maxX += 1;
     gridInfo.minY -= 1;
     gridInfo.maxY += 1;
-    gridInfo.infiniteGridValues = !gridInfo.infiniteGridSwitches || gridInfo.infiniteGridValues === "1" ? "0" : "1";
+    gridInfo.infiniteGridValues = !gridInfo.infiniteGridSwitches || i % 2 == 0 ? "0" : "1";
   }
 
   private _getPixelValue(
@@ -128,12 +127,7 @@ export class Day20 extends Day {
     for (let dy = -1; dy <= 1; dy++) {
       for (let dx = -1; dx <= 1; dx++) {
         const coord: Coordinate = Coordinate.addCoordinates(pixel, new Coordinate(dx, dy));
-        if (
-          coord.x >= gridInfo.minX &&
-          coord.x <= gridInfo.maxX &&
-          coord.y >= gridInfo.minY &&
-          coord.y <= gridInfo.maxY
-        ) {
+        if (coord.x > gridInfo.minX && coord.x < gridInfo.maxX && coord.y > gridInfo.minY && coord.y < gridInfo.maxY) {
           binaryString += !!allLightPixels[coord.serialisedValue] ? "1" : "0";
         } else {
           binaryString += gridInfo.infiniteGridValues;
