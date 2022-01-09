@@ -22,6 +22,7 @@ import { DAY_21_TEST_CASES } from '../test_inputs/day21';
 import { DAY_22_TEST_CASES } from '../test_inputs/day22';
 import { DAY_23_TEST_CASES } from '../test_inputs/day23';
 import { DAY_24_TEST_CASES } from '../test_inputs/day24';
+import { DAY_25_TEST_CASES } from '../test_inputs/day25';
 // MORE TEST CASE IMPORTS HERE
 import { TestCase } from "../test_inputs/test-case";
 import { Day } from "./day";
@@ -49,6 +50,7 @@ import { Day21 } from './days/day21';
 import { Day22 } from './days/day22';
 import { Day23 } from './days/day23';
 import { Day24 } from './days/day24';
+import { Day25 } from './days/day25';
 // MORE IMPORTS HERE
 
 export const DAYS: Record<number, Day> = {
@@ -76,6 +78,7 @@ export const DAYS: Record<number, Day> = {
   22: new Day22(),
   23: new Day23(),
   24: new Day24(),
+  25: new Day25(),
   // MORE DAYS HERE
 };
 
@@ -104,5 +107,6 @@ export const TEST_CASES: Record<number, TestCase[]> = {
   22: DAY_22_TEST_CASES,
   23: DAY_23_TEST_CASES,
   24: DAY_24_TEST_CASES,
+  25: DAY_25_TEST_CASES,
   // MORE TEST CASES HERE
 };
